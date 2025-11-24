@@ -128,6 +128,7 @@ public class TelaTabuada extends Application {
         });
 
         btnCalcular.setOnAction(e -> {
+            validarTabuada();
 
             Tabuada lista = new Tabuada();
             String[] tabuada;
@@ -144,5 +145,30 @@ public class TelaTabuada extends Application {
 
         });
 
+    }
+
+    private boolean validarTabuada() {
+
+        if (tfMultiplicador.getText().isEmpty()){
+            mostrarAlerta(Alert.AlertType.ERROR, "Multiplicador está vazio");
+            tfMultiplicador.requestFocus();
+            return false;
+        }else if (tfMenorMultiplicador.getText().isEmpty()){
+            mostrarAlerta(Alert.AlertType.ERROR, "Menor Multiplicador está vazio");
+            tfMenorMultiplicador.requestFocus();
+            return false;
+        }else if (tfMaiorMultiplicador.getText().isEmpty()){
+            mostrarAlerta(Alert.AlertType.ERROR, "Maior Multiplicador está vazio");
+            tfMaiorMultiplicador.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String mensagem ) {
+        Alert alert = new Alert(tipo, mensagem);
+        alert.setTitle("Alerta!");
+        alert.showAndWait();
     }
 }
