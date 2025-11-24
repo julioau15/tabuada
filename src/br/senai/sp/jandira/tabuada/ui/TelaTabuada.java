@@ -1,5 +1,6 @@
 package br.senai.sp.jandira.tabuada.ui;
 import br.senai.sp.jandira.tabuada.model.Tabuada;
+import com.sun.source.tree.TryTree;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -8,7 +9,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TelaTabuada extends Application {
     TextField tfMultiplicador;
@@ -143,6 +153,16 @@ public class TelaTabuada extends Application {
                 lvResultado.getItems().add(label);
             }
 
+            String dadosTabuada = multiplicando + ";" + multiplicadorInicial + ";" + multiplicadorFinal + ";" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "\n";
+
+//            gravar os dados da tabuada em arquivos csv
+            Path arquivo = Path.of("C:\\Users\\25203694\\ds1t\\tabuada\\dados_tabuada.csv");
+
+            try{
+                Files.writeString(arquivo, dadosTabuada, StandardOpenOption.APPEND);
+            } catch (IOException erro){
+
+            }
         });
 
     }
@@ -169,6 +189,8 @@ public class TelaTabuada extends Application {
     private void mostrarAlerta(Alert.AlertType tipo, String mensagem ) {
         Alert alert = new Alert(tipo, mensagem);
         alert.setTitle("Alerta!");
+        alert.setHeaderText(null);
         alert.showAndWait();
     }
+
 }
