@@ -1,17 +1,20 @@
 package br.senai.sp.jandira.tabuada.ui;
+import br.senai.sp.jandira.tabuada.model.Tabuada;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.Optional;
+
 public class TelaTabuada extends Application {
+    TextField tfMultiplicador;
+    TextField tfMenorMultiplicador;
+    TextField tfMaiorMultiplicador;
+
 
 
     @Override
@@ -31,7 +34,7 @@ public class TelaTabuada extends Application {
                 lblTexto
         );
         header.setStyle("-fx-background-color: #3b3b3b; -fx-padding: 10;");
-        lblTitulo.setStyle("-fx-font-size: 18px; -fx-text-fill: #c9c9c9");
+        lblTitulo.setStyle("-fx-font-size: 18px; -fx-text-fill: #cbcbcb; -fx-font-weight: bold");
         lblTexto.setStyle("-fx-font-size: 14px; -fx-text-fill: #c9c9c9");
 
 //        tabela
@@ -39,9 +42,9 @@ public class TelaTabuada extends Application {
         Label lblMultiplicando = new Label("Multiplicando:");
         Label lblMenorMultiplicador = new Label("Menor Multiplicador:");
         Label lblMaiorMultiplicador = new Label("Maior Multiplicador:");
-        TextField tfMultiplicador = new TextField();
-        TextField tfMenorMultiplicador = new TextField();
-        TextField tfMaiorMultiplicador = new TextField();
+        tfMultiplicador = new TextField();
+        tfMenorMultiplicador = new TextField();
+        tfMaiorMultiplicador = new TextField();
         gridFormulario.add(lblMultiplicando,0,0);
         gridFormulario.add(tfMultiplicador, 1, 0);
         gridFormulario.add(lblMenorMultiplicador,0,1);
@@ -68,7 +71,7 @@ public class TelaTabuada extends Application {
                 btnSair
         );
         boxButtons.setStyle("-fx-background-color: #707070; -fx-alignment: CENTER; -fx-padding: 15 0 15 0; -fx-font-size: 15px;");
-        boxButtons.setSpacing(10);
+        boxButtons.setSpacing(15);
         btnCalcular.setPrefWidth(100);
         btnLimpar.setPrefWidth(100);
         btnSair.setPrefWidth(100);
@@ -79,13 +82,6 @@ public class TelaTabuada extends Application {
         Label lblTabuada = new Label("Tabuada");
 
         ListView lvResultado = new ListView();
-        String[] tabuadas = new String[5];
-        tabuadas[0] = "Tabuada";
-        tabuadas[1] = "Multiplicador";
-        tabuadas[2] = "Menor Multiplicador";
-        tabuadas[3] = "Maior Multiplicador";
-        tabuadas[4] = "Multiplicando";
-        lvResultado.getItems().addAll(tabuadas);
 
         boxResultado.getChildren().addAll(
                 lblTabuada,
@@ -105,10 +101,48 @@ public class TelaTabuada extends Application {
         );
 
         root.setStyle("-fx-background-color: #3b3b3b");
-        root.setStyle("-fx-padding: 10px;");
+
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+
+        btnLimpar.setOnAction(e -> {
+           tfMultiplicador.setText("");
+           tfMenorMultiplicador.setText("");
+           tfMaiorMultiplicador.setText("");
+           lvResultado.getItems().clear();
+           tfMultiplicador.requestFocus();
+        });
+
+        btnSair.setOnAction(e -> {
+           Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Deseja realmente sair?", ButtonType.YES, ButtonType.NO);
+           alert.setTitle("Sair");
+           alert.setHeaderText(null);
+           alert.setContentText("Deseja realmente sair?");
+           Optional<ButtonType> result = alert.showAndWait();
+           if (result.get() == ButtonType.YES) {
+               System.exit(0);
+           }
+
+        });
+
+        btnCalcular.setOnAction(e -> {
+
+            Tabuada lista = new Tabuada();
+            String[] tabuada;
+
+            String multiplicadorInicial = tfMenorMultiplicador.getText();
+            String multiplicadorFinal = tfMaiorMultiplicador.getText();
+            String multiplicando = tfMultiplicador.getText();
+
+            tabuada = lista.calcularTabuada(multiplicadorInicial, multiplicadorFinal, multiplicando);
+            for (int i = 0; i < tabuada.length; i++) {
+                Label label = new Label(tabuada[i]);
+                lvResultado.getItems().add(label);
+            }
+
+        });
+
     }
 }
